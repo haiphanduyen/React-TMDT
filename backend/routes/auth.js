@@ -2,12 +2,18 @@ const router = require("express").Router();
 const User = require("../models/User")
 const CryptoJS = require('crypto-js')
 const jwt= require('jsonwebtoken')
+const CLIENT_URL = "http://localhost:3000/";
 
 router.post("/register", async (req, res) => {
     const newUser = new User({
         username: req.body.username,
         email: req.body.email,
-        password: CryptoJS.AES.encrypt(req.body.password,process.env.PASS_SEC).toString()
+        password: CryptoJS.AES.encrypt(req.body.password,process.env.PASS_SEC).toString(),
+        address: req.body.address,
+        image:req.body.image,
+        phone:req.body.phone,
+        fullname:req.body.fullname
+
     });
 
     try{
@@ -19,6 +25,13 @@ router.post("/register", async (req, res) => {
 
     
 });
+
+
+
+router.get("/logout", (req, res) => {
+    req.logout();
+    res.redirect(CLIENT_URL);
+  });
 
 
 

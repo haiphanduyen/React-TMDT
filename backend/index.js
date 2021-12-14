@@ -7,6 +7,8 @@ const authRoute = require('./routes/auth')
 const ProductRoute = require('./routes/product')
 const CartRoute=require('./routes/cart')
 const orderRoute=require('./routes/order')
+const stripeRoute = require('./routes/stripe')
+const cors = require('cors')
 
 dotenv.config();
 
@@ -16,12 +18,14 @@ console.log("DB connection successful"))
 .catch((err)=>{console.log(err)})
 
 app.use(express.json());
+app.use(cors())
 
 app.use("/api/users",userRoute)
 app.use("/api/products",ProductRoute)
 app.use("/api/carts",CartRoute)
 app.use("/api/auth",authRoute)
 app.use("/api/orders",orderRoute)
+app.use("/api/checkout",stripeRoute)
 
 
 
