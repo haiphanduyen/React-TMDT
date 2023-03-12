@@ -9,6 +9,7 @@ import {
 } from "@material-ui/icons";
 import styled from "styled-components";
 import { mobile } from "../responsive";
+import { L } from "../utils"
 
 const Container = styled.div`
   display: flex;
@@ -90,7 +91,7 @@ const Footer = () => {
       <Left>
         <Logo>DEHIGH</Logo>
         <Desc>
-          QUALITY IS FIRST BRING OUR BRAND TO WORD
+          {L("QUALITY IS FIRST BRING OUR BRAND TO WORD")}
         </Desc>
         <SocialContainer>
           <SocialIcon color="3B5999">

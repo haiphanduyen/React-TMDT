@@ -155,16 +155,12 @@ const Product = () => {
   const handleClick = ()=>{
     dispatch(
       addProduct({...product, quantity, color, size})
-      
-    )
-    
-    
+    );
   }
-  
 
   return (
     <Container>
-      <Navbar />
+      <Navbar/>
       <Announcement />
       <Wrapper>
         <ImgContainer>

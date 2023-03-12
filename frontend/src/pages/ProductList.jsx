@@ -38,6 +38,9 @@ const Select = styled.select`
 `;
 const Option = styled.option``;
 
+const listColor = ["All", "White", "Black", "Red", "Blue", "Yellow", "Green"];
+const listSizer = ["All", "XS", "S", "M", "L", "XL"];
+
 const ProductList = () => {
   const location = useLocation();
   const cat = location.pathname.split("/")[2];
@@ -46,15 +49,32 @@ const ProductList = () => {
 
   const handleFilters = (e) => {
     const value = e.target.value;
+    if(value === "All") {
+      delete filters?.[e.target.name];
+      setFilters({...filters});
+      return;
+    }
     setFilters({
       ...filters,
       [e.target.name]: value,
     });
   };
 
+  const handleSearch = (value) => {
+    if(value === "") {
+      delete filters?.title;
+      setFilters({...filters});
+      return;
+    }
+    setFilters({
+      ...filters,
+      title: value,
+    });
+  }
+
   return (
     <Container>
-      <Navbar />
+      <Navbar onSearch={(value) => handleSearch(value)}/>
       <Announcement />
       <Title>{cat}</Title>
       <FilterContainer>
@@ -62,20 +82,16 @@ const ProductList = () => {
           <FilterText>Filter Products:</FilterText>
           <Select name="color" onChange={handleFilters}>
             <Option disabled>Color</Option>
-            <Option>White</Option>
-            <Option>Black</Option>
-            <Option>Red</Option>
-            <Option>Blue</Option>
-            <Option>Yellow</Option>
-            <Option>Green</Option>
+            {listColor.map((item, idx) => (
+              <Option key={idx}>{item}</Option>
+            ))}
+            
           </Select>
           <Select name="size" onChange={handleFilters}>
             <Option disabled>Size</Option>
-            <Option>XS</Option>
-            <Option>S</Option>
-            <Option>M</Option>
-            <Option>L</Option>
-            <Option>XL</Option>
+            {listSizer.map((item, idx) => (
+              <Option key={idx}>{item}</Option>
+            ))}
           </Select>
         </Filter>
         <Filter>
@@ -87,7 +103,7 @@ const ProductList = () => {
           </Select>
         </Filter>
       </FilterContainer>
-      <Products cat={cat} filters={filters} sort={sort} />
+      <Products cat={cat} filters={filters} sort={sort}/>
       <Newsletter />
       <Footer />
     </Container>

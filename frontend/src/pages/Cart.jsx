@@ -1,5 +1,5 @@
 import { Add, Remove } from "@material-ui/icons";
-import { useSelector } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import styled from "styled-components";
 import Announcement from "../components/Announcement";
 import Footer from "../components/Footer";
@@ -8,7 +8,7 @@ import { mobile } from "../responsive";
 import StripeCheckout from "react-stripe-checkout";
 import { useEffect, useState } from "react";
 import {userRequest} from "../requestMethod";
- 
+import { removeProduct } from "../redux/cartRedux";
  
 import {
   BrowserRouter as Router,
@@ -128,6 +128,7 @@ const ProductAmount = styled.div`
 const ProductPrice = styled.div`
   font-size: 30px;
   font-weight: 200;
+  cursor: pointer;
   ${mobile({ marginBottom: "20px" })}
 `;
 
@@ -170,14 +171,14 @@ const Button = styled.button`
 `;
 
 const Cart = () => {
-  const cart = useSelector(state=>state.cart)
+  const cartSelector = useSelector(state=>state.cart);
+  const cart = (cartSelector.quantity === 0 ? JSON.parse(localStorage.getItem("cart")) : cartSelector) || [];
   const [stripeToken,setStripeToken]=useState(null)
   const onToken =(token)=>{
     setStripeToken(token)
-
   }
-  console.log(stripeToken)
-  const history=useHistory()
+  const history = useHistory()
+  const dispatch = useDispatch();
 
   
   useEffect(() => {
@@ -195,6 +196,13 @@ const Cart = () => {
     stripeToken && makeRequest();
   }, [stripeToken, cart.total, history]);
 
+  const removeItemCart = (e, id) => {
+    e.stopPropagation();
+    dispatch(
+      removeProduct(id)
+    );
+    console.log(id)
+  };
   
   return (
     <Container>
@@ -213,7 +221,7 @@ const Cart = () => {
         </Top>
         <Bottom>
           <Info>
-            {cart.products.map(product=>(
+            {cart?.products?.map(product=>(
                 <Product>
                 <ProductDetail>
                   <Image src={product.img} />
@@ -221,9 +229,6 @@ const Cart = () => {
                     <ProductName>
                       <b>Product:</b> {product.title}
                     </ProductName>
-                    <ProductId>
-                      <b>ID:</b> {product._id}
-                    </ProductId>
                     <ProductColor color={product.color} />
                     <ProductSize>
                       <b>Size:</b> {product.size}
@@ -234,10 +239,11 @@ const Cart = () => {
                   <ProductAmountContainer>
                     <h3>Quantity:</h3>
                    
-                    <ProductAmount>{product.quantity}</ProductAmount>
+                    <ProductAmount>{product?.quantity}</ProductAmount>
                     
                   </ProductAmountContainer>
-                  <ProductPrice>{product.price*product.quantity}$</ProductPrice>
+                  <ProductPrice>{product?.price*product.quantity}$</ProductPrice>
+                  <ProductPrice onClick={(e) => {removeItemCart(e, product._id)}}>X</ProductPrice>
                 </PriceDetail>
               </Product>
             ))}
@@ -248,7 +254,7 @@ const Cart = () => {
             <SummaryTitle>ORDER SUMMARY</SummaryTitle>
             <SummaryItem>
               <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>${cart.total}</SummaryItemPrice>
+              <SummaryItemPrice>${cart?.total}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem>
               <SummaryItemText>Shipping Fee</SummaryItemText>
@@ -257,7 +263,7 @@ const Cart = () => {
            
             <SummaryItem type="total">
               <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ {cart.total+5}</SummaryItemPrice>
+              <SummaryItemPrice>$ {cart?.total+5}</SummaryItemPrice>
             </SummaryItem>
             <StripeCheckout
               name="User"

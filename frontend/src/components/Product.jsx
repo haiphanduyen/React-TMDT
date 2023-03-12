@@ -16,7 +16,7 @@ const Info = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.2) !important;
   z-index: 3;
   display: flex;
   align-items: center;
@@ -33,7 +33,7 @@ const Container = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #f5fbfd;
+  background-color: #f5fbfd !important;
   position: relative;
 
   &:hover ${Info}{
@@ -41,11 +41,23 @@ const Container = styled.div`
   }
 `;
 
+const ContainerCollum = styled.div`
+  margin: 5px;
+  min-width: 280px;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5fbfd !important;
+  position: relative;
+  flex-direction: column;
+`;
+
 const Circle = styled.div`
   width: 200px;
   height: 200px;
   border-radius: 50%;
-  background-color: white;
+  background-color: white !important;
   position: absolute;
 `;
 
@@ -54,35 +66,42 @@ const Image = styled.img`
   z-index: 2;
 `;
 
+const Name = styled.div `
+  color: black;
+  font-size: 30px
+`;
+
 const Icon = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: white;
+  background-color: white !important;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 10px;
   transition: all 0.5s ease;
   &:hover {
-    background-color: #e9f5f5;
+    background-color: #e9f5f5 !important;
     transform: scale(1.1);
   }
 `;
 
 const Product = ({ item }) => {
   return (
+  <Link to={`/product/${item._id}`} className="link">
     <Container>
       <Circle />
       <Image src={item.img} />
       <Info>
+        <Name>
+          {item.title}
+        </Name>
         <Icon>
           <ShoppingCartOutlined />
         </Icon>
         <Icon>
-          <Link to={`/product/${item._id}`}>
           <SearchOutlined />
-          </Link>
         </Icon>
         <Icon>
           <FavoriteBorderOutlined />
@@ -93,6 +112,7 @@ const Product = ({ item }) => {
         </Icon>
       </Info>
     </Container>
+  </Link>
   );
 };
 

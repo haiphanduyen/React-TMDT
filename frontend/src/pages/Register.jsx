@@ -82,7 +82,6 @@ const Register = () => {
       phone:data.phone,
       fullname:data.fullname
     }).then(res=>{
-      console.log(data)
     })
     history.push(alert('Thành Công'))
     history.push('/login')
@@ -92,7 +91,6 @@ const Register = () => {
     const newdata={...data}
     newdata[e.target.id]=e.target.value
     setData(newdata)
-    console.log(newdata)
   }
   
   return (  

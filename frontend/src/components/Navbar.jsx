@@ -1,6 +1,7 @@
 import { Badge } from "@material-ui/core";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
-import React from "react";
+import React, {useState} from "react";
+import { L } from "../utils"
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { mobile } from "../responsive";
@@ -10,10 +11,6 @@ import {
   Link,
  
 } from "react-router-dom";
- 
-
- 
- 
 
 const link = styled.div`
 
@@ -76,7 +73,7 @@ const Right = styled.div`
   justify-content: flex-end;
   ${mobile({ flex: 2, justifyContent: "center" })}
 `;
-
+  
 const MenuItem = styled.div`
   font-size: 14px;
   cursor: pointer;
@@ -84,23 +81,31 @@ const MenuItem = styled.div`
   ${mobile({ fontSize: "12px", marginLeft: "10px" })}
 `;
 
-const Navbar = ( ) => {
-  const quantity= useSelector(state=>state.cart.quantity)
-  console.log(quantity)
+const Navbar = ({ onSearch }) => {
+  const quantity= (useSelector(state=>state.cart.quantity));
+  const lang = localStorage.getItem("lang");
 
-  const user = useSelector( state  => state.user.currentUser);
-  console.log(user )
-   const data=JSON.stringify(user)
-  const logout=()=>{
-    window.open("http://localhost:5000/auth/logout", "_self");
+  const onHandleSearch = (e) => {
+    onSearch && onSearch(e.target.value);
   }
+
+  const user = JSON.parse(localStorage.getItem("curentUser"));
+
+
+  const handleChangeLanguage = (e) => {
+    const curLang = lang === "vn" ? "en" : "vn";
+    console.log("curLang", curLang);
+    localStorage.setItem("lang", curLang);
+    window.location.reload();
+  };
+
   return (
     <Container>
       <Wrapper>
         <Left>
-          <Language>EN</Language>
+          <Language onClick={handleChangeLanguage}>{lang === "vn" ? "VN" : "EN"}</Language>
           <SearchContainer>
-            <Input placeholder="Search" />
+            <Input id="input-search" placeholder={L("Hold Shilf + f to search")} onChange={onHandleSearch}/>
             <Search style={{ color: "gray", fontSize: 16 }} />
           </SearchContainer>
         </Left>
@@ -113,12 +118,12 @@ const Navbar = ( ) => {
         {user ? (
         <div>
            <Right>
-          <Link to={`/user/${user .others._id}` } className="link">
-            <MenuItem>{user.others.fullname}</MenuItem>
+          <Link to={`/user/${user?._id}` } className="link">
+            <MenuItem>{user?.fullname}</MenuItem>
             </Link>
           
           <Link to='/login' className="link">
-          <MenuItem onClick={logout}>LOG OUT</MenuItem>
+          <MenuItem>LOG OUT</MenuItem>
           </Link>
           </Right>
 
@@ -143,7 +148,7 @@ const Navbar = ( ) => {
             
           <Link to ='/cart'>
           <MenuItem>
-            <Badge badgeContent={quantity} color="primary">
+            <Badge badgeContent={quantity || JSON.parse(localStorage.getItem("cart"))?.quantity} color="primary">
               <ShoppingCartOutlined />
             </Badge>
           </MenuItem>

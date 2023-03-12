@@ -28,18 +28,19 @@ const Products = ({ cat, filters, sort }) => {
     getProducts();
   }, [cat]);
 
-  console.log(products)
-
   useEffect(() => {
-    cat &&
+      if (!cat) return;
       setFilteredProducts(
         products.filter((item) =>
-          Object.entries(filters).every(([key, value]) =>
-            item[key].includes(value)
+          Object.entries(filters).every(([key, value]) => {
+            const rs = item[key].includes(value)
+            return rs;
+          }
           )
         )
       );
   }, [products, cat, filters]);
+
 
   useEffect(() => {
     if (sort === "newest") {

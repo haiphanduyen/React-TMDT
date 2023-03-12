@@ -176,18 +176,16 @@ const Success = () => {
 
   
   const cart = useSelector(state=>state.cart)
-  const user = useSelector( state  => state.user.currentUser);
-  console.log(cart)
+  const user = JSON.parse(localStorage.getItem("curentUser"));
   const [data,setData]=useState({
-    userId:user.others._id,
+    userId:user?._id,
     products:[cart.products.map(product =>(
       product._id,
       product.quantity
     ))],
     amount:cart.total + 5,
-    address:user.others.address
+    address:user?.address
   })
- console.log(data)
   async function checkout(){
      await axios.post('http://localhost:5000/api/orders',{
       userId:data.userId,
@@ -199,9 +197,6 @@ const Success = () => {
   
     })
   }
-
-
-  
  
   return (
     <Container>
@@ -227,9 +222,9 @@ const Success = () => {
               <Col><Form>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder={user.others.email}  id="email"  />
+                <Form.Control type="email" placeholder={user?.email}  id="email"  />
                 <Form.Label>Fullname</Form.Label>
-                <Form.Control type="fullname" placeholder={user.others.fullname}   id="fullname" />
+                <Form.Control type="fullname" placeholder={user?.fullname}   id="fullname" />
                  
               </Form.Group>
 
@@ -237,9 +232,9 @@ const Success = () => {
                  
               </Form.Group>
               <Form.Label>Address</Form.Label>
-                <Form.Control type="address" placeholder={user.others.address}  id="address"  />
+                <Form.Control type="address" placeholder={user?.address}  id="address"  />
                 <Form.Label>Phone</Form.Label>
-                <Form.Control type="phone" placeholder={user.others.phone}   id="phone" />
+                <Form.Control type="phone" placeholder={user?.phone}   id="phone" />
                 <br/>
                
               
