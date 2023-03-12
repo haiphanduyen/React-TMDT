@@ -8,6 +8,8 @@ import {
   BrowserRouter as Router,
   Link
 } from "react-router-dom";
+import { BROAD_CAST_CHANNEL } from "../constant"
+
 
 const Container = styled.div`
   width: 100vw;
@@ -78,10 +80,13 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const { isFetching, error } = useSelector((state) => state.user);
+  const bc = new BroadcastChannel(BROAD_CAST_CHANNEL);
+
 
   const handleClick = (e) => {
     e.preventDefault();
     login(dispatch, { username, password });
+    bc.postMessage("login");
   };
   return (
     <Container>

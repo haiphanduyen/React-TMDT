@@ -1,0 +1,1 @@
+export const BROAD_CAST_CHANNEL = "main-channel";

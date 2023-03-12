@@ -1,6 +1,6 @@
 import { Badge } from "@material-ui/core";
 import { Search, ShoppingCartOutlined } from "@material-ui/icons";
-import React, {useState} from "react";
+import React, {useEffect} from "react";
 import { L } from "../utils"
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -11,6 +11,8 @@ import {
   Link,
  
 } from "react-router-dom";
+
+import { BROAD_CAST_CHANNEL } from "../constant"
 
 const link = styled.div`
 
@@ -84,6 +86,7 @@ const MenuItem = styled.div`
 const Navbar = ({ onSearch }) => {
   const quantity= (useSelector(state=>state.cart.quantity));
   const lang = localStorage.getItem("lang");
+  const bc = new BroadcastChannel(BROAD_CAST_CHANNEL);
 
   const onHandleSearch = (e) => {
     onSearch && onSearch(e.target.value);
@@ -94,9 +97,17 @@ const Navbar = ({ onSearch }) => {
 
   const handleChangeLanguage = (e) => {
     const curLang = lang === "vn" ? "en" : "vn";
-    console.log("curLang", curLang);
     localStorage.setItem("lang", curLang);
     window.location.reload();
+  };
+
+  const handleLogOut = (e) => {
+    e.stopPropagation();
+    localStorage.removeItem("cart");
+    localStorage.removeItem("token");
+    localStorage.removeItem("curentUser");
+    window.location.reload();
+    bc.postMessage("logout");
   };
 
   return (
@@ -123,7 +134,7 @@ const Navbar = ({ onSearch }) => {
             </Link>
           
           <Link to='/login' className="link">
-          <MenuItem>LOG OUT</MenuItem>
+          <MenuItem onClick={handleLogOut}>LOG OUT</MenuItem>
           </Link>
           </Right>
 
