@@ -2,8 +2,7 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import {useState} from 'react'
 import {useHistory} from 'react-router-dom'
-import Form from 'react-bootstrap/Form'
-import axios from 'axios'
+import {publicRequest} from "../requestMethod"
  
 
 const Container = styled.div`
@@ -70,10 +69,14 @@ const Register = () => {
     phone:"",
     fullname: ""
   })
-  const history=useHistory()
-  function sumbit(e){
-    e.preventDefault()
-    axios.post('http://localhost:5000/api/auth/register',{  
+  const history=useHistory();
+
+  const isEmail = data.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+  console.log('isEmail >>', isEmail)
+
+  const sumbit = async(e) =>{
+    e.preventDefault();
+    const value = {  
       username:data.username,
       email:data.email, 
       password:data.password,
@@ -81,10 +84,24 @@ const Register = () => {
       image:data.image,
       phone:data.phone,
       fullname:data.fullname
-    }).then(res=>{
-    })
-    history.push(alert('Thành Công'))
-    history.push('/login')
+    };
+    const isEmail = data.email.match(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g);
+    if(!isEmail || isEmail?.length == 0) {
+      alert('Email nhu cc');
+      return;
+    }
+    if(data?.username && data?.email && data?.password && data?.address && data?.phone && data?.fullname) {
+      const rs = await publicRequest.post(`/auth/register/`, value );
+      console.log('rs >>>>>', rs);
+      if(rs) {
+        alert('Đăng ký thành công');
+      } else {
+        alert('Lỗi hệ thống');
+      }
+      history.push('/login');
+    } else {
+      alert('Vui lòng điền đẩy đủ thông tin');
+    }
   } 
 
   function handle(e){

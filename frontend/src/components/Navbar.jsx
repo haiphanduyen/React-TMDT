@@ -66,6 +66,7 @@ const Center = styled.div`
 
 const Logo = styled.h1`
   font-weight: bold;
+  cursor:pointer;
   ${mobile({ fontSize: "24px" })}
 `;
 const Right = styled.div`
@@ -122,7 +123,7 @@ const Navbar = ({ onSearch }) => {
         </Left>
         <Center>
           
-          <Logo>DEHIGH</Logo>
+          <Logo onClick={() => {window.location.href = '/'}}>DEHIGH</Logo>
           
         </Center>
         <Right>
@@ -130,7 +131,7 @@ const Navbar = ({ onSearch }) => {
         <div>
            <Right>
           <Link to={`/user/${user?._id}` } className="link">
-            <MenuItem>{user?.fullname}</MenuItem>
+            <MenuItem>{user?.fullname || user?.username || 'user'}</MenuItem>
             </Link>
           
           <Link to='/login' className="link">
@@ -151,15 +152,12 @@ const Navbar = ({ onSearch }) => {
           <MenuItem>SIGN IN</MenuItem>
           </Link>
           </Right>
-
         </div>
-         
       )}
          
-            
           <Link to ='/cart'>
           <MenuItem>
-            <Badge badgeContent={quantity || JSON.parse(localStorage.getItem("cart"))?.quantity} color="primary">
+            <Badge overlap="rectangular" badgeContent={quantity || JSON.parse(localStorage.getItem("cart"))?.quantity} color="primary">
               <ShoppingCartOutlined />
             </Badge>
           </MenuItem>

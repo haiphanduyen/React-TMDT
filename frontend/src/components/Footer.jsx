@@ -89,7 +89,7 @@ const Footer = () => {
   return (
     <Container>
       <Left>
-        <Logo>DEHIGH</Logo>
+        <Logo onClick={() => {window.location.href='/'}}>DEHIGH</Logo>
         <Desc>
           {L("QUALITY IS FIRST BRING OUR BRAND TO WORD")}
         </Desc>

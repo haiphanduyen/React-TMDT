@@ -47,6 +47,8 @@ const ProductList = () => {
   const [filters, setFilters] = useState({});
   const [sort, setSort] = useState("newest");
 
+  console.log('filter re-render', filters);
+
   const handleFilters = (e) => {
     const value = e.target.value;
     if(value === "All") {
@@ -89,7 +91,7 @@ const ProductList = () => {
           </Select>
           <Select name="size" onChange={handleFilters}>
             <Option disabled>Size</Option>
-            {listSizer.map((item, idx) => (
+            {listSizer?.map((item, idx) => (
               <Option key={idx}>{item}</Option>
             ))}
           </Select>

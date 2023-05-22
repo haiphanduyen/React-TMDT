@@ -15,8 +15,6 @@ import {
  Link,
  useHistory
 } from "react-router-dom";
- 
-
 
 
 const KEY =process.env.STRIPE_KEY_PUBLIC
@@ -179,7 +177,6 @@ const Cart = () => {
   }
   const history = useHistory()
   const dispatch = useDispatch();
-
   
   useEffect(() => {
     const makeRequest = async () => {
@@ -265,21 +262,9 @@ const Cart = () => {
               <SummaryItemText>Total</SummaryItemText>
               <SummaryItemPrice>$ {cart?.total+5}</SummaryItemPrice>
             </SummaryItem>
-            <StripeCheckout
-              name="User"
-              image="https://miuc.org/wp-content/uploads/2019/08/How-do-we-use-money.jpg"
-              billingAddress
-              shippingAddress
-              description={`Your total is $${cart.total+5}`}
-              amount={cart.total*100+500}
-              token={onToken}
-              stripeKey={KEY}
-            >
-              <Button>STRIPE CHECKOUT </Button>
-            </StripeCheckout> <br/> <br/>
-            
-             
-            <Button > <Link to='/success'>CHECK OUT </Link></Button>
+            {cart?.products?.length > 0 ? 
+              <Button > <Link to='/success'>CHECK OUT </Link></Button>
+            : <SummaryItemText>No item in cart</SummaryItemText>}
              
           </Summary>
         </Bottom>

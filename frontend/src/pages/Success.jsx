@@ -11,19 +11,12 @@ import {userRequest} from "../requestMethod";
 import { Card,Row,Col,Form} from 'react-bootstrap'
 
 import axios from 'axios'
- 
- 
 import {
   BrowserRouter as Router,
  Link,
  useHistory
 } from "react-router-dom";
  
-
-
-
-
-
 const Container = styled.div``;
 
 const Wrapper = styled.div`
@@ -173,29 +166,40 @@ const Button = styled.button`
 `;
 
 const Success = () => {
-
-  
-  const cart = useSelector(state=>state.cart)
+  const cart = JSON.parse(localStorage.getItem("cart"))
   const user = JSON.parse(localStorage.getItem("curentUser"));
   const [data,setData]=useState({
     userId:user?._id,
-    products:[cart.products.map(product =>(
-      product._id,
-      product.quantity
-    ))],
-    amount:cart.total + 5,
-    address:user?.address
-  })
-  async function checkout(){
-     await axios.post('http://localhost:5000/api/orders',{
-      userId:data.userId,
-      products:data.products,
-      amount:data.amount,
-      address:data.address,
+    fullname:user?.fullname,
+    products:[cart.products.map(product =>{
+      return {
+        productId:product._id,
+        quantity:  product.quantity
+      }
     }
-    ).then(res=>{
-  
-    })
+    )],
+    amount:cart.total + 5 || 1,
+    address:user?.address,
+    phone:user?.phone
+  })
+  console.log('data', data);
+  async function checkout(){
+    if(data?.address && data?.fullname && data?.phone && data?.userId) {
+      const rs = await userRequest.post('/orders', 
+        data
+      );
+      if(rs?.status == 200) {
+        localStorage.removeItem("cart");
+        alert('Đơn hàng của bạn đã được tiếp nhân');
+        window.location.href = '/';
+      } else {
+        alert('Lỗi hệ thống');
+      }
+    } else {
+      alert('Vui lòng cập nhật đầy đủ thông tin');
+      return;
+    }
+
   }
  
   return (
@@ -209,22 +213,19 @@ const Success = () => {
           <TopButton >CONTINUE SHOPPING</TopButton>
           </Link>
           <TopTexts>
-            
           </TopTexts>
-         
         </Top>
         <Bottom>
           <Info>
-          
                <div>
                  <Container>
             <Row>        
               <Col><Form>
               <Form.Group className="mb-3" controlId="formBasicEmail">
                 <Form.Label>Email</Form.Label>
-                <Form.Control type="email" placeholder={user?.email}  id="email"  />
+                <Form.Control type="email"  id="email"  value={user?.email} disabled/>
                 <Form.Label>Fullname</Form.Label>
-                <Form.Control type="fullname" placeholder={user?.fullname}   id="fullname" />
+                <Form.Control type="fullname" value={user?.fullname} disabled id="fullname" />
                  
               </Form.Group>
 
@@ -232,20 +233,16 @@ const Success = () => {
                  
               </Form.Group>
               <Form.Label>Address</Form.Label>
-                <Form.Control type="address" placeholder={user?.address}  id="address"  />
+                <Form.Control type="address" value={user?.address}  id="address" disabled/>
                 <Form.Label>Phone</Form.Label>
-                <Form.Control type="phone" placeholder={user?.phone}   id="phone" />
+                <Form.Control type="phone" value={user?.phone}   id="phone" disabled/>
                 <br/>
-               
-              
             </Form>
                 </Col>
             </Row>
             
           </Container>
                </div>
-     
-            
             <Hr />
           </Info>
           <Summary>

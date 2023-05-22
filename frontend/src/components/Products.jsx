@@ -14,15 +14,17 @@ const Products = ({ cat, filters, sort }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
+  console.log('filteredProducts', filteredProducts);
+
   useEffect(() => {
     const getProducts = async () => {
       try {
         const res = await axios.get(
           cat
-            ? `http://localhost:5000/api/products?category=${cat}`
-            : "http://localhost:5000/api/products"
+            ? `https://adminp.onrender.com/api/products?category=${cat}`
+            : "https://adminp.onrender.com/api/products"
         );
-        setProducts(res.data);
+        setProducts(res?.data);
       } catch (err) {}
     };
     getProducts();
@@ -31,9 +33,10 @@ const Products = ({ cat, filters, sort }) => {
   useEffect(() => {
       if (!cat) return;
       setFilteredProducts(
-        products.filter((item) =>
+        products.filter((item) => 
           Object.entries(filters).every(([key, value]) => {
-            const rs = item[key].includes(value)
+            const rs = item[key]?.includes(value)
+            console.log('rs filter >>>', rs);
             return rs;
           }
           )

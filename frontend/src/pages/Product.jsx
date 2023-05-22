@@ -133,16 +133,18 @@ const Product = () => {
   const [color,setColor]=useState("")
   const [size,setSize]=useState("")
   const dispatch = useDispatch()
+  const getProducts= async()=>{
+    try{
+      const res= await publicRequest.get(`/products/find/${id}`);
+      console.log('res', res);
+      setProduct(res.data)
+    }catch(err){}
+  }
   useEffect(()=>{
-    const getProducts= async()=>{
-      try{
-        const res= await publicRequest.get(`/products/find/`+id)
-        setProduct(res.data)
-      }catch(err){}
-    }
     getProducts()
-    
   },[id])
+
+  console.log('product', product)
 
   const handleQuantity =(type) =>{
     if(type ==="dec"){
@@ -164,18 +166,18 @@ const Product = () => {
       <Announcement />
       <Wrapper>
         <ImgContainer>
-          <Image src={product.img}/>
+          <Image src={product?.img}/>
         </ImgContainer>
         <InfoContainer>
-          <Title>{product.title}</Title>
+          <Title>{product?.title}</Title>
           <Desc>
-            {product.desc}
+            {product?.desc}
           </Desc>
-          <Price>{product.price}$</Price>
+          <Price>{product?.price}$</Price>
           <FilterContainer>
             <Filter>
               <FilterTitle>Color</FilterTitle>
-              {product.color?.map(c=>(
+              {product?.color?.map(c=>(
                 <FilterColor color={c} key={c} onClick={()=>setColor(c)}/>
 
               ))}
